@@ -1,0 +1,30 @@
+.THIS {
+}
+
+.THIS .slds-theme_shade, .THIS .slds-theme--shade{
+    background-color: #009ac7;
+    color: white;
+}
+
+.THIS ul {
+    list-style: none; 
+}
+
+.THIS ul li.custom-dot::before {
+    content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+    color: #009ac7; /* Change the color */
+    font-weight: bold; /* If you want it to be bold */
+    display: inline-block; /* Needed to add space between the bullet and the text */
+    width: 1em; /* Also needed for space (tweak if needed) */
+    margin-left: -1em; /* Also needed for space (tweak if needed) */
+}
+
+.THIS .firm-logo {
+    height: 65px;
+    width: auto;
+    max-width: 40%;
+}
+
+.THIS .word-wrap {
+    word-wrap: break-word;
+}

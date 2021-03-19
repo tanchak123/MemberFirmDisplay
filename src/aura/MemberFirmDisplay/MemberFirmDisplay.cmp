@@ -1,0 +1,331 @@
+<!--
+	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	// - Written by JOW 2020.01 -
+	// Description
+	// 
+	////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    >>- Changelog -<<
+    date - author - description
+-->
+<aura:component description="MemberFirmDisplay" access="public" implements="forceCommunity:availableforAllPageTypes,force:appHostable,flexipage:availableForAllPageTypes" controller="MemberFirmDisplay_Ctrl">
+
+	<aura:attribute name="memberFirm" type="Object"/>
+    <aura:attribute name="urlParams" type="Map" description="A map of url parameters in key, value pairs" access="public"/>
+	<aura:attribute name="memberFirmId" type ="String"/>
+    <aura:attribute name="selTabId" type="string" default="firmDetailTab" />
+    <aura:attribute name="businessLineList" type="String[]" default="[]"/>
+    <aura:attribute name="languageList" type="String[]" default="[]"/>
+    <aura:attribute name="sectorList" type="String[]" default="[]"/>
+    <aura:attribute name="otherSocialMediaList" type="String[]" default="[]"/>
+    <aura:attribute name="firmLogoUrl" type="String"/>
+    <aura:attribute name="isDataLoaded" type="Boolean" default="false"/>
+    
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }"/>
+    <c:getUrlParams urlParams="{!v.urlParams}" debug="true"/>
+    
+    
+    
+    
+    <!-- MARKUP -->
+	<lightning:tabset selectedTabId="{!v.selTabId}">
+		<lightning:tab label="Member Firm Details" id="firmDetailTab">
+            <aura:if isTrue="{!v.isDataLoaded}">
+                
+                <div class="slds-p-left_medium slds-p-right_medium">
+                    <div class="slds-form-element slds-m-top_x-small slds-m-bottom_medium">
+                        <aura:if isTrue="{!v.firmLogoUrl != null}">
+                            <img class="firm-logo" src="{!v.firmLogoUrl}" alt="Firm Logo"/>
+                            <aura:set attribute="else">
+                                <img class="firm-logo" src="{!$ContentAsset.kreston_gradient_K_only}" alt="Firm Logo"/>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                    
+                    <div class="slds-text-heading_small">
+                        <b>{!v.memberFirm.memberFirmName}</b>
+                    </div>
+                    <aura:if isTrue="{!not(empty(v.memberFirm.country))}">
+                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_medium">
+                            <label class="slds-form-element__label" for="form-element-01">Country</label>
+                            <div class="slds-form-element__control">
+                                <p>{!v.memberFirm.country}</p>
+                            </div>
+                        </div>
+                    </aura:if>
+                    
+                    
+                </div>
+                <aura:if isTrue="{!greaterthan(v.memberFirm.officesNum, 0) || not(empty(v.memberFirm.primaryOfficeLocationName)) || not(empty(v.memberFirm.primaryContactName)) || not(empty(v.memberFirm.websiteAddress)) || not(empty(v.memberFirm.secondaryContactName))}">
+                    <div class="slds-section slds-is-open">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" title="Contact Information">Contact Information</span>                   
+                            
+                        </h3>
+                        <div aria-hidden="false" class="slds-section__content slds-p-left_medium slds-p-right_medium">
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_6-of-12">
+                                    <aura:if isTrue="{!not(empty(v.memberFirm.primaryOfficeLocationName))}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">Primary Office Location</label>
+                                            <div class="slds-form-element__control word-wrap">
+                                                <p>{!v.memberFirm.primaryOfficeStreet}</p>
+                                                <p>{!v.memberFirm.primaryOfficeLocationName}</p>
+                                                <p>{!v.memberFirm.primaryOfficeState}</p>
+                                                <p>{!v.memberFirm.primaryOfficeZipCode}</p>
+                                                <p>{!v.memberFirm.primaryOfficeCountry}</p>
+                                            </div>
+                                        </div>
+                                    </aura:if>
+                                    
+                                    
+                                    
+                                </div>
+                                
+                                <div class="slds-col slds-size_6-of-12">
+                                    <aura:if isTrue="{!greaterthan(v.memberFirm.officesNum, 0)}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">Other Offices</label>
+                                            <div class="slds-form-element__control word-wrap">
+                                                <a href="javascript:void(0)" onclick="{!c.goToOffices}">Click here to view all offices</a>
+                                            </div>
+                                        </div>
+                                    </aura:if>
+                                    
+                                    
+                                    
+                                    <aura:if isTrue="{!not(empty(v.memberFirm.websiteAddress))}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">Website Address</label>
+                                            <div class="slds-form-element__control word-wrap">
+                                                <a href="{!v.memberFirm.websiteAddress}" target="_blank">{!v.memberFirm.websiteAddress}</a>
+                                            </div>
+                                        </div>
+                                    </aura:if>                           
+                                    
+                                    
+                                    
+                                    
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_6-of-12">
+                                    <aura:if isTrue="{!not(empty(v.memberFirm.primaryContactName))}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">Primary Contact</label>
+                                            <div class="slds-form-element__control word-wrap">
+                                                <a href="{!v.memberFirm.primaryContactIdURL}">{!v.memberFirm.primaryContactName}</a>
+                                            </div>
+                                        </div> 
+                                    </aura:if>
+                                    
+                                    <aura:if isTrue="{!not(empty(v.memberFirm.primaryContactEmail))}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">Primary Contact Email</label>
+                                            <div class="slds-form-element__control word-wrap">
+                                                <a href="{!'mailto:'+v.memberFirm.primaryContactEmail}">{!v.memberFirm.primaryContactEmail}</a>
+                                            </div>
+                                        </div>
+                                    </aura:if>                           
+                                    
+                                    
+                                    <aura:if isTrue="{!not(empty(v.memberFirm.primaryContactPhone))}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">Primary Contact Phone</label>
+                                            <div class="slds-form-element__control word-wrap">
+                                                <a href="javascript:void(0)">{!v.memberFirm.primaryContactPhone}</a>
+                                            </div>
+                                        </div>
+                                    </aura:if>  
+                                </div>
+                                
+                                <div class="slds-col slds-size_6-of-12">
+                                    <aura:if isTrue="{!not(empty(v.memberFirm.secondaryContactName))}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">Secondary Contact</label>
+                                            <div class="slds-form-element__control word-wrap">
+                                                <a href="{!v.memberFirm.secondaryContactIdURL}">{!v.memberFirm.secondaryContactName}</a>
+                                            </div>
+                                        </div>
+                                    </aura:if>                           
+                                    
+                                    
+                                    <aura:if isTrue="{!not(empty(v.memberFirm.secondaryContactEmail))}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">Secondary Contact Email</label>
+                                            <div class="slds-form-element__control word-wrap">
+                                                <a href="{!'mailto:'+v.memberFirm.secondaryContactEmail}">{!v.memberFirm.secondaryContactEmail}</a>
+                                            </div>
+                                        </div>
+                                    </aura:if>                           
+                                    
+                                    
+                                    <aura:if isTrue="{!not(empty(v.memberFirm.secondaryContactPhone))}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">Secondary Contact Phone</label>
+                                            <div class="slds-form-element__control word-wrap">
+                                                <a href="javascript:void(0)">{!v.memberFirm.secondaryContactPhone}</a>
+                                            </div>
+                                        </div>
+                                    </aura:if> 
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!not(empty(v.memberFirm.linkedInCompanyPage)) || not(empty(v.memberFirm.twitterAddress)) || not(empty(v.memberFirm.facebookCompanyPage)) || not(empty(v.otherSocialMediaList))}">
+                    <div class="slds-section slds-is-open">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" title="Digital Footprint">Digital Footprint</span>                   
+                            
+                        </h3>
+                        <div aria-hidden="false" class="slds-section__content slds-p-left_medium slds-p-right_medium">
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_6-of-12">
+                                    
+                                    <aura:if isTrue="{!not(empty(v.memberFirm.linkedInCompanyPage))}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">LinkedIn Company Page</label>
+                                            <div class="slds-form-element__control word-wrap">
+                                                <a href="{!v.memberFirm.linkedInCompanyPage}" target="_blank">{!v.memberFirm.linkedInCompanyPage}</a>           
+                                            </div>
+                                        </div>
+                                    </aura:if>                           
+                                    
+                                    
+                                    <aura:if isTrue="{!not(empty(v.otherSocialMediaList))}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">Other Social Media</label>
+                                            <div class="slds-form-element__control word-wrap">
+                                                <aura:iteration items="{!v.otherSocialMediaList}" var="socMedia">
+                                                    <p><a href="{!socMedia}" target="_blank"> {!socMedia}</a></p>
+                                                </aura:iteration>
+                                            </div>
+                                        </div>
+                                    </aura:if>                           
+                                    
+                                </div>
+                                
+                                <div class="slds-col slds-size_6-of-12">
+                                    
+                                    <aura:if isTrue="{!not(empty(v.memberFirm.twitterAddress))}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">Twitter Address</label>
+                                            <div class="slds-form-element__control word-wrap">
+                                                <a href="{!v.memberFirm.twitterAddress}" target="_blank">{!v.memberFirm.twitterAddress}</a>
+                                            </div>
+                                        </div>
+                                    </aura:if>                           
+                                    
+                                    
+                                    <aura:if isTrue="{!not(empty(v.memberFirm.facebookCompanyPage))}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">Facebook Company Page</label>
+                                            <div class="slds-form-element__control word-wrap">
+                                                <a href="{!v.memberFirm.facebookCompanyPage}" target="_blank">{!v.memberFirm.facebookCompanyPage}</a>
+                                            </div>
+                                        </div>
+                                    </aura:if>                           
+                                    
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </aura:if>
+                
+                
+                <aura:if isTrue="{!not(empty(v.businessLineList)) || not(empty(v.languageList))}">
+                    <div class="slds-section slds-is-open">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" title="Business Lines &amp; Languages Spoken">Business Lines &amp; Languages Spoken</span>                   
+                            
+                        </h3>
+                        <div aria-hidden="false" class="slds-section__content slds-p-left_medium slds-p-right_medium">
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_6-of-12">
+                                    
+                                    <aura:if isTrue="{!not(empty(v.businessLineList))}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">Business Lines</label>
+                                            <div class="slds-form-element__control slds-p-top_xxx-small">
+                                                <ul class="slds-list_dotted">
+                                                    <aura:iteration items="{!v.businessLineList}" var="busLine">
+                                                        <li class="custom-dot">{!busLine}</li>
+                                                    </aura:iteration>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </aura:if>                           
+                                    
+                                </div>
+                                
+                                <div class="slds-col slds-size_6-of-12">
+                                    
+                                    <aura:if isTrue="{!not(empty(v.languageList))}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">Languages Spoken</label>
+                                            <div class="slds-form-element__control slds-p-top_xxx-small">
+                                                <ul class="slds-list_dotted">
+                                                    <aura:iteration items="{!v.languageList}" var="language">
+                                                        <li class="custom-dot">{!language}</li>
+                                                    </aura:iteration>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </aura:if>                           
+                                    
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!not(empty(v.sectorList))}">
+                    <div class="slds-section slds-is-open">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" title="Sectors">Sectors</span>                   
+                            
+                        </h3>
+                        <div aria-hidden="false" class="slds-section__content slds-p-left_medium slds-p-right_medium">
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_6-of-12">
+                                    
+                                    <aura:if isTrue="{!not(empty(v.sectorList))}">
+                                        <div class="slds-form-element slds-m-top_x-small slds-m-bottom_x-small">
+                                            <label class="slds-form-element__label" for="form-element-01">Sectors</label>
+                                            <div class="slds-form-element__control slds-p-top_xxx-small">
+                                                <ul class="slds-list_dotted">
+                                                    <aura:iteration items="{!v.sectorList}" var="sector">
+                                                        <li class="custom-dot">{!sector}</li>
+                                                    </aura:iteration>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </aura:if>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+            </aura:if>
+            
+			
+		</lightning:tab>
+        
+        <lightning:tab label="Contacts" id="contactTab"> 
+            <c:MemberFirmRelatedList accountId="{!memberFirmId}" relatedListType="Contacts"/>
+            
+        </lightning:tab>
+        
+        <lightning:tab label="Offices" id="officeTab">
+            <c:MemberFirmRelatedList accountId="{!memberFirmId}" relatedListType="Member Firm Offices"/>
+        </lightning:tab>
+
+	</lightning:tabset>
+
+
+
+</aura:component>
